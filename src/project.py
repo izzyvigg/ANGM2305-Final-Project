@@ -1,32 +1,44 @@
-import math
-import PIL
-import extcolors
-import matplotlib.pyplot as plt
-from PIL import Image, ImageDraw
-from matplotlib import gridspec
-from tkinter import Tk, filedialog
+import pygame
+import os
+import sys
+from pygame.locals import *
+import tkinter as tk
+from tkinter import filedialog
 
-def main():
-    # Get the image file from the user and run the window
-    image_path = get_image_file()
-    if image_path:
-        study_image(image_path)
-    else:
-        print("No image file selected.")
+pygame.init()
+# screen setup
+screen_width = 800
+screen_height = 500
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("My Color Picker")
 
-def fetch_image(image_path):
-    return PIL.Image.open(image_path)
+# store selected colors
+selected_colors = []
+max_colors = 10
 
-def study_image(image_path):
-    img = fetch_image(image_path)
+# image variables
+image = None
+image_rect = None
 
-def get_image_file():
-    root = Tk()
-    root.withdraw()
-    return filedialog.askopenfilename(
-        title="Select an image file",
-        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")]
-    )
-
-if __name__ == "__main__":
-    main()
+def load_image(filepath):
+    # loading image from user file
+    global image, image_rect
+    try:
+        image = pygame.image.load(filepath).convert()
+        # scale img to fit in its panel
+        max_width = screen_width // 2 - 40
+        max_height = screen_height - 80
+        
+        # new img dimensions
+        width_ratio = max_width / image.get_width()
+        height_ratio = max_height / image.get_height()
+        scale = min(width_ratio, height_ratio)
+        
+        new_width = int(image.get_width() * scale)
+        new_height = int(image.get_height() * scale)
+        
+        image = pygame.transform.scale(image, (new_width, new_height))
+        image_rect = image.get_rect(center=(screen_width//4, screen_height//2))
+        return True
+    except:
+        return False
