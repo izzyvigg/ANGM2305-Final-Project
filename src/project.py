@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 pygame.init()
+
 # screen setup
 screen_width = 800
 screen_height = 500
@@ -65,6 +66,12 @@ def draw_buttons():
         pygame.draw.rect(screen, LIGHT_BLUE, (50, 80, 200, 40))
         add_text = font.render("Add Another Image", True, BLACK)
         screen.blit(add_text, (50 + 100 - add_text.get_width()//2, 80 + 20 - add_text.get_height()//2))
+    
+    # Save Palette button (only shown when there are colors)
+    if selected_colors:
+        pygame.draw.rect(screen, LIGHT_BLUE, (50, 130, 200, 40))
+        save_text = font.render("Save Palette", True, BLACK)
+        screen.blit(save_text, (50 + 100 - save_text.get_width()//2, 130 + 20 - save_text.get_height()//2))
 
 
 def draw_palette():
@@ -102,7 +109,39 @@ def get_image_path():
     except:
         return None
     
-    
+def save_palette():
+    try:        
+        # prompt user for file path
+        file_path = filedialog.asksaveasfilename(
+            title="Save Palette As",
+            defaultextension=".png",
+            filetypes=[("PNG Image", "*.png"), ("JPEG Image", "*.jpg")]
+        )
+        
+        if file_path:
+            # create new surface for palette
+            swatch_size = 100
+            margin = 20
+            palette_width = min(3, len(selected_colors)) * (swatch_size + margin) + margin
+            palette_height = ((len(selected_colors) + 2) // 3) * (swatch_size + margin) + margin
+            
+            palette_surface = pygame.Surface((palette_width, palette_height))
+            palette_surface.fill(WHITE)
+            
+            # draw swatches
+            for i, color in enumerate(selected_colors):
+                row = i // 3
+                col = i % 3
+                x = margin + col * (swatch_size + margin)
+                y = margin + row * (swatch_size + margin)
+                
+                pygame.draw.rect(palette_surface, color, (x, y, swatch_size, swatch_size))
+            
+            pygame.image.save(palette_surface, file_path)
+            return True
+    except:
+        return False
+
 def main():
     global selected_colors, image, image_rect
     
@@ -143,6 +182,15 @@ def main():
                         # Load the new image but keep existing colors
                         load_image(file_path)
                 
+                # clicked on save button?
+                elif selected_colors and 50 <= event.pos[0] <= 250 and 130 <= event.pos[1] <= 170:
+                    if save_palette():
+                        # success message
+                        success_text = font.render("Palette saved!", True, BLACK)
+                        screen.blit(success_text, (50, 180))
+                        pygame.display.flip()
+                        pygame.time.delay(1000)
+
                 # clicked on image?
                 elif image_rect and image_rect.collidepoint(event.pos):
                     if len(selected_colors) < max_colors:
