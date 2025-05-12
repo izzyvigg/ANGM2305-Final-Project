@@ -8,8 +8,8 @@ from tkinter import filedialog
 pygame.init()
 
 # screen setup
-screen_width = 800
-screen_height = 500
+screen_width = 1200
+screen_height = 900
 screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("My Color Picker")
 
@@ -25,7 +25,9 @@ big_font = pygame.font.SysFont('Helvetica', 30)
 
 # store selected colors
 selected_colors = []
-max_colors = 10
+max_colors = 12
+palettes = [[]]  # List of palettes, starts with one empty palette
+current_palette = 0  # Index of currently active palette
 
 # image variables
 image = None
@@ -49,7 +51,7 @@ def load_image(filepath):
         new_height = int(image.get_height() * scale)
         
         image = pygame.transform.scale(image, (new_width, new_height))
-        image_rect = image.get_rect(center=(screen_width//4, screen_height//2))
+        image_rect = image.get_rect(center=(screen_width//4, screen_height//1.8))
         return True
     except:
         return False
@@ -67,11 +69,13 @@ def draw_buttons():
         add_text = font.render("Add Another Image", True, BLACK)
         screen.blit(add_text, (50 + 100 - add_text.get_width()//2, 80 + 20 - add_text.get_height()//2))
     
-    # Save Palette button (only shown when there are colors)
+    # save palette button
     if selected_colors:
         pygame.draw.rect(screen, LIGHT_BLUE, (50, 130, 200, 40))
         save_text = font.render("Save Palette", True, BLACK)
         screen.blit(save_text, (50 + 100 - save_text.get_width()//2, 130 + 20 - save_text.get_height()//2))
+
+    # add palette button
 
 
 def draw_palette():
