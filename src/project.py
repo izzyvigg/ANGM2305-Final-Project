@@ -53,6 +53,7 @@ def load_image(filepath):
     except:
         return False
 
+
 def draw_buttons():
     # upload img button
     pygame.draw.rect(screen, LIGHT_BLUE, (50, 30, 200, 40))
@@ -65,6 +66,47 @@ def draw_buttons():
         add_text = font.render("Add Another Image", True, BLACK)
         screen.blit(add_text, (50 + 100 - add_text.get_width()//2, 80 + 20 - add_text.get_height()//2))
 
+
+def draw_palette():
+    palette_title = big_font.render("Your Color Palette", True, BLACK)
+    screen.blit(palette_title, (screen_width//2 + 50, 20))
+    
+    if not selected_colors:
+        # Show empty message
+        text = font.render("Click on the image to pick colors!", True, BLACK)
+        screen.blit(text, (screen_width//2 + 50, screen_height//2))
+    else:
+        # Draw color swatches
+        swatch_size = 60
+        swatches_per_row = 3
+        for i, color in enumerate(selected_colors):
+            row = i // swatches_per_row
+            col = i % swatches_per_row
+            x = screen_width//2 + 50 + col * (swatch_size + 20)
+            y = 80 + row * (swatch_size + 20)
+            
+            pygame.draw.rect(screen, color, (x, y, swatch_size, swatch_size))
+            
+            # Show RGB values below each swatch
+            rgb_text = font.render(f"{color[0]},{color[1]},{color[2]}", True, BLACK)
+            screen.blit(rgb_text, (x + swatch_size//2 - rgb_text.get_width()//2, y + swatch_size + 5))
+            
+        # Show count
+        count_text = font.render(f"Colors: {len(selected_colors)}/{max_colors}", True, BLACK)
+        screen.blit(count_text, (screen_width//2 + 50, screen_height - 40))
+
+
+def get_image_path():
+    try:
+        file_path = filedialog.askopenfilename(
+            title="Select an image",
+            filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.gif")]
+        )
+        return file_path
+    except:
+        return None
+    
+    
 def main():
     global selected_colors, image, image_rect
     
@@ -82,8 +124,9 @@ def main():
         # draw palette space
         pygame.draw.rect(screen, GRAY, (screen_width//2 + 20, 20, screen_width//2 - 40, screen_height - 40), 2)
         
-        # draw buttons
+        # draw buttons & palette
         draw_buttons()
+        draw_palette()
         
         pygame.display.flip()
     
@@ -91,5 +134,4 @@ def main():
     sys.exit()
 
 if __name__ == "__main__":
-    
     main()
