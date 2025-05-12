@@ -1,4 +1,4 @@
-# 2305finalProject - Color Palette Tool
+# 2305finalProject - My Color Picker
 
 ## Demo
 Demo Video: <https://youtu.be/O02H3W0HAgE>
@@ -8,6 +8,8 @@ GitHub Repo: <https://github.com/izzyvigg/ANGM2305-Final-Project.git>
 
 ## Description
 For my Intro to Programming final, I made a custom color palette tool. You can upload as many images as you'd like as you create the perfect palette, or if you're having trouble deciding, you can create an additional palette for comparison. When you're done testing your eye for color, you can export one or both palettes to your computer for whatever project you may need them for. For use, just have the desired image(s) that you'll be extracting colors from in your computer files, and you're ready to go!
+
+In the future, I'd like to add a zoom function to have more precision in where you click, and a functional full-screen option.
 
 ## References
 - Building a color palette generator in Python: <https://kylermintah.medium.com/coding-a-color-palette-generator-in-python-inspired-by-procreate-5x-b10df37834ae>
