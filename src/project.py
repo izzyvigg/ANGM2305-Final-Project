@@ -87,10 +87,6 @@ def draw_palette():
             
             pygame.draw.rect(screen, color, (x, y, swatch_size, swatch_size))
             
-            # Show RGB values below each swatch
-            rgb_text = font.render(f"{color[0]},{color[1]},{color[2]}", True, BLACK)
-            screen.blit(rgb_text, (x + swatch_size//2 - rgb_text.get_width()//2, y + swatch_size + 5))
-            
         # Show count
         count_text = font.render(f"Colors: {len(selected_colors)}/{max_colors}", True, BLACK)
         screen.blit(count_text, (screen_width//2 + 50, screen_height - 40))
@@ -128,6 +124,40 @@ def main():
         draw_buttons()
         draw_palette()
         
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                running = False
+                
+            if event.type == MOUSEBUTTONDOWN:
+                # clicked on upload button?
+                if 50 <= event.pos[0] <= 250 and 30 <= event.pos[1] <= 70:
+                    file_path = get_image_path()
+                    if file_path:
+                        load_image(file_path)
+                        selected_colors = []  # Reset colors when loading new image
+                
+                # clicked on add img button?
+                elif image and 50 <= event.pos[0] <= 250 and 80 <= event.pos[1] <= 120:
+                    file_path = get_image_path()
+                    if file_path:
+                        # Load the new image but keep existing colors
+                        load_image(file_path)
+                
+                # clicked on image?
+                elif image_rect and image_rect.collidepoint(event.pos):
+                    if len(selected_colors) < max_colors:
+                        # get color
+                        x_in_image = event.pos[0] - image_rect.left
+                        y_in_image = event.pos[1] - image_rect.top
+                        
+                        if 0 <= x_in_image < image.get_width() and 0 <= y_in_image < image.get_height():
+                            color = image.get_at((x_in_image, y_in_image))
+                            color = (color[0], color[1], color[2]) # convert to RGB
+                            
+                            # add to palette
+                            if color not in selected_colors:
+                                selected_colors.append(color)
+
         pygame.display.flip()
     
     pygame.quit()
