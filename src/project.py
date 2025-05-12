@@ -76,7 +76,13 @@ def draw_buttons():
         screen.blit(save_text, (50 + 100 - save_text.get_width()//2, 130 + 20 - save_text.get_height()//2))
 
     # add palette button
+    palette_start_x = screen_width // 1.22
+    add_palette_button_width = 180
 
+    pygame.draw.rect(screen, LIGHT_BLUE, (palette_start_x, 40, add_palette_button_width, 50))
+    add_palette_text = font.render("Add Palette", True, BLACK)
+    screen.blit(add_palette_text, (palette_start_x + add_palette_button_width//2 - add_palette_text.get_width()//2, 
+                                 65 - add_palette_text.get_height()//2))
 
 def draw_palette():
     palette_title = big_font.render("Your Color Palette", True, BLACK)
@@ -85,7 +91,7 @@ def draw_palette():
     if not selected_colors:
         # Show empty message
         text = font.render("Click on the image to pick colors!", True, BLACK)
-        screen.blit(text, (screen_width//2 + 50, screen_height//2))
+        screen.blit(text, (screen_width//2 + 50, screen_height//17))
     else:
         # Draw color swatches
         swatch_size = 60
